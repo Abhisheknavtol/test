@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Country & State Dropdown</title>
+<style>
+    select {
+        width: 200px;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+</style>
+</head>
+<body>
+    <label for="countries">Select Country:</label>
+    <select id="countries" onchange="populateStates()">
+        <option value="">Select Country</option>
+        <option value="usa">USA</option>
+        <option value="canada">Canada</option>
+    </select>
+
+    <label for="states">Select State:</label>
+    <select id="states">
+        <option value="">Select State</option>
+    </select>
+
+    <script>
+        const statesByCountry = {
+            usa: ['New York', 'California', 'Texas', 'Florida'],
+            canada: ['Ontario', 'Quebec', 'British Columbia', 'Alberta']
+        };
+
+        function populateStates() {
+            const selectedCountry = document.getElementById('countries').value;
+            const statesDropdown = document.getElementById('states');
+            statesDropdown.innerHTML = '<option value="">Select State</option>'; // Reset the dropdown
+
+            if (selectedCountry) {
+                const states = statesByCountry[selectedCountry];
+                states.forEach(state => {
+                    const option = document.createElement('option');
+                    option.value = state;
+                    option.textContent = state;
+                    statesDropdown.appendChild(option);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
