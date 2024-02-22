@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Button Count Example</title>
+<style>
+    .container {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 20px;
+    }
+    button {
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div>
+        <p>Count for p1: <span id="count_p1">0</span></p>
+        <button onclick="increment('p1')">+</button>
+        <button onclick="decrement('p1')">-</button>
+    </div>
+    <div>
+        <p>Count for p2: <span id="count_p2">0</span></p>
+        <button onclick="increment('p2')">+</button>
+        <button onclick="decrement('p2')">-</button>
+    </div>
+    <div>
+        <p>Count for p3: <span id="count_p3">0</span></p>
+        <button onclick="increment('p3')">+</button>
+        <button onclick="decrement('p3')">-</button>
+    </div>
+    <div>
+        <p>Count for p4: <span id="count_p4">0</span></p>
+        <button onclick="increment('p4')">+</button>
+        <button onclick="decrement('p4')">-</button>
+    </div>
+</div>
+
+<script>
+    let counts = {
+        p1: 0,
+        p2: 0,
+        p3: 0,
+        p4: 0
+    };
+
+    function increment(id) {
+        counts[id]++;
+        updateCount(id);
+        captureCounts();
+    }
+
+    function decrement(id) {
+        counts[id]--;
+        updateCount(id);
+        captureCounts();
+    }
+
+    function updateCount(id) {
+        const countSpan = document.getElementById(`count_${id}`);
+        countSpan.textContent = counts[id];
+    }
+
+    function captureCounts() {
+        console.log("Current count of p1:", counts.p1);
+        console.log("Current count of p2:", counts.p2);
+        console.log("Current count of p3:", counts.p3);
+        console.log("Current count of p4:", counts.p4);
+    }
+</script>
+
+</body>
+</html>
