@@ -1,0 +1,78 @@
+<label for="countrySelect">Select Country:</label>
+	<select id="countrySelect" onchange="fetchStates(this)">
+		<option value="India">India</option>
+		<option value="USA">USA</option>
+		<!-- Add more countries here -->
+	</select>
+
+	<label for="stateSelect">Select State:</label>
+	<select id="stateSelect" onchange="fetchLocations(this)">
+		<!-- States will be populated dynamically using JavaScript -->
+	</select>
+
+	<label for="stateLoc">Select Locations:</label>
+	<select id="stateLoc">
+		<!-- States will be populated dynamically using JavaScript -->
+	</select>
+
+	<script>
+		function fetchStates(item) {
+			const stateSelect = document.getElementById('stateSelect');
+			stateSelect.innerHTML = '';
+			// Add a default option
+			const defaultOption = document.createElement('option');
+			defaultOption.value = '';
+			defaultOption.textContent = 'Select State';
+			stateSelect.appendChild(defaultOption);
+			$.ajax({
+				type: 'GET',
+				url: '/states',
+				success: function (data) {
+					console.log('Data received:', data);
+
+					data.forEach(state => {
+						if (item.value === "India") {
+							const option = document.createElement('option');
+							option.value = state.firstName;
+							option.textContent = state.firstName;
+							stateSelect.appendChild(option);
+						}
+					});
+
+				},
+				error: function (error) {
+					console.error('Error:', error);
+				}
+			});
+		}
+
+		function fetchLocations(item) {
+
+			$.ajax({
+				type: 'GET',
+				url: '/states',
+				success: function (data) {
+					console.log('Data received:', data);
+					const locationSelect = document.getElementById('stateLoc');
+					locationSelect.innerHTML = '';
+					const defaultOption = document.createElement('option');
+					defaultOption.value = '';
+					defaultOption.textContent = 'Select Location';
+					locationSelect.appendChild(defaultOption);
+					data.forEach(state => {
+						if (item.value === "Akshay123") {
+							const option = document.createElement('option');
+							option.value = state.firstName;
+							option.textContent = state.firstName;
+							locationSelect.appendChild(option);
+						}
+					});
+
+				},
+				error: function (error) {
+					console.error('Error:', error);
+				}
+			});
+		}
+
+	</script>
