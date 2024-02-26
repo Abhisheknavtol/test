@@ -1,0 +1,99 @@
+<label for="stateSelect">Select State:</label>
+<select id="stateSelect" onchange="generateForm()">
+    <option value="Delhi">Delhi</option>
+    <option value="Mumbai">Mumbai</option>
+    <!-- Add more states here -->
+</select>
+
+<div id="dynamicForm"></div> <!-- Container for dynamically generated form -->
+
+<script>
+    function generateForm() {
+        const state = document.getElementById('stateSelect').value;
+        const dynamicForm = document.getElementById('dynamicForm');
+        dynamicForm.innerHTML = ''; // Clear previous content
+        
+        if (state === 'Delhi') {
+            // Create a div with fields and save button for Delhi
+            const formDiv = document.createElement('div');
+            formDiv.innerHTML = `
+                <label for="field1">Field 1:</label>
+                <input type="text" id="field1"><br>
+                <label for="field2">Field 2:</label>
+                <input type="text" id="field2"><br>
+                <label for="field3">Field 3:</label>
+                <input type="text" id="field3"><br>
+                <label for="field4">Field 4:</label>
+                <input type="text" id="field4"><br>
+                <button id="saveButton">Save Data</button>
+            `;
+            dynamicForm.appendChild(formDiv);
+
+            // Attach event listener to the save button
+            const saveButton = formDiv.querySelector('#saveButton');
+            saveButton.addEventListener('click', () => {
+                saveData(state);
+            });
+        } else if (state === 'Mumbai') {
+            // Create a div with fields and different button ID for Mumbai
+            const formDiv = document.createElement('div');
+            formDiv.innerHTML = `
+                <label for="field1">Field 1:</label>
+                <input type="text" id="field1"><br>
+                <label for="field2">Field 2:</label>
+                <input type="text" id="field2"><br>
+                <label for="field3">Field 3:</label>
+                <input type="text" id="field3"><br>
+                <label for="field4">Field 4:</label>
+                <input type="text" id="field4"><br>
+                <button id="mumbaiSaveButton">Save Data for Mumbai</button>
+            `;
+            dynamicForm.appendChild(formDiv);
+
+            // Attach event listener to the save button for Mumbai
+            const mumbaiSaveButton = formDiv.querySelector('#mumbaiSaveButton');
+            mumbaiSaveButton.addEventListener('click', () => {
+                console.log(document.getElementById('field1').value)
+                saveData(state);
+            });
+        }
+    }
+
+    function saveData(state) {
+        // Retrieve data from input fields
+        const field1 = document.getElementById('field1').value;
+        const field2 = document.getElementById('field2').value;
+        const field3 = document.getElementById('field3').value;
+        const field4 = document.getElementById('field4').value;
+
+        // Construct data object to send via AJAX
+        const data = {
+            state: state,
+            field1: field1,
+            field2: field2,
+            field3: field3,
+            field4: field4
+        };
+
+        // Send AJAX request to save data
+        fetch('/saveDataEndpoint', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            // Handle response
+            if (response.ok) {
+                alert('Data saved successfully!');
+            } else {
+                throw new Error('Failed to save data');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to save data');
+        });
+    }
+</script>
