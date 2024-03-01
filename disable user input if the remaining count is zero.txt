@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamically Disable User Input Fields</title>
+</head>
+<body>
+    <div id="inputFieldsContainer">
+        <!-- Input fields will be dynamically added here -->
+    </div>
+
+    <script>
+        // Simulated remaining counts fetched from the server
+        const remainingCounts = [2, 1, 0]; // Example remaining counts
+        
+        
+        // Function to dynamically create user input fields
+        function createInputFields() {
+            const inputFieldsContainer = document.getElementById('inputFieldsContainer');
+            inputFieldsContainer.innerHTML = ''; // Clear previous content
+            let inputFieldsHTML = '';
+            
+            // Loop over remaining counts to create input fields
+            for (let i = 0; i < remainingCounts.length; i++) {
+                // Create HTML for an input field
+                inputFieldsHTML += `<input type="text" id="usercount${i}" placeholder="Enter count for input ${i+1}" `;
+                
+                // Disable input field if remaining count is 0
+                if (remainingCounts[i] === 0) {
+                    inputFieldsHTML += 'disabled ';
+                }
+                
+                // Close the input field tag
+                inputFieldsHTML += '/>';
+            }
+            
+            // Set the HTML content of the container
+            inputFieldsContainer.innerHTML = inputFieldsHTML;
+        }
+
+        // Call the function to create input fields when the page loads
+        window.onload = createInputFields;
+    </script>
+</body>
+</html>
