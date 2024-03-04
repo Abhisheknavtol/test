@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Selects</title>
+</head>
+<body>
+    <div id="selectsContainer">
+        <!-- Select elements will be dynamically added here -->
+    </div>
+
+    <button onclick="addSelect()">Add Select</button>
+
+    <script>
+        let selectCounter = 1; // Counter to keep track of the number of select elements
+        let maxCount = 4; // Example max count retrieved from the database
+        let remainingCount = maxCount; // Initial remaining count is equal to max count
+
+        function addSelect() {
+            const selectsContainer = document.getElementById('selectsContainer');
+
+            // Create a new select element
+            const select = document.createElement('select');
+            select.id = 'select' + selectCounter; // Set a unique ID for the select element
+
+            // Create options for the select based on the remaining count
+            for (let i = 0; i <= remainingCount; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                select.appendChild(option);
+            }
+
+            // Append the select element to the container
+            selectsContainer.appendChild(select);
+
+            selectCounter++; // Increment the select counter for the next select element
+        }
+
+        // Example function to simulate form submission
+        function submitForm() {
+            const selectedValues = [];
+            const selects = document.querySelectorAll('select');
+            selects.forEach(select => {
+                selectedValues.push(select.value);
+            });
+            console.log('Selected values:', selectedValues);
+        }
+
+        // Example function to simulate updating remaining count after form submission
+        function updateRemainingCount(submittedValues) {
+            const sum = submittedValues.reduce((total, value) => total + parseInt(value), 0);
+            remainingCount = maxCount - sum;
+            console.log('Remaining count:', remainingCount);
+        }
+    </script>
+</body>
+</html>
