@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Checked Checkboxes to Controller</title>
+</head>
+<body>
+    <!-- Example checkboxes with dynamic names -->
+    <input type="checkbox" name="count_0" value="1"> Option 1 <br>
+    <input type="checkbox" name="count_1" value="2"> Option 2 <br>
+    <input type="checkbox" name="count_2" value="3"> Option 3 <br>
+    <!-- Add more checkboxes with dynamic names as needed -->
+
+    <button id="sendButton">Send Checked Values</button>
+
+    <script>
+        document.getElementById('sendButton').addEventListener('click', function() {
+            // Array to store the values of checked checkboxes
+            var checkedValues = [];
+
+            // Get all checkboxes with dynamic names
+            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+            // Iterate through checkboxes
+            checkboxes.forEach(function(checkbox) {
+                // Check if checkbox is checked
+                if (checkbox.checked) {
+                    // Get the value of the checked checkbox and push it to the array
+                    checkedValues.push(checkbox.value);
+                }
+            });
+
+            // Send the array of checked values to the controller using AJAX
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/your-controller-endpoint', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        console.log('Checked values sent successfully:', xhr.responseText);
+                        // Handle success response from the controller if needed
+                    } else {
+                        console.error('Error sending checked values:', xhr.statusText);
+                        // Handle error response from the controller if needed
+                    }
+                }
+            };
+            xhr.send(JSON.stringify(checkedValues)); // Convert array to JSON string before sending
+        });
+    </script>
+</body>
+</html>
