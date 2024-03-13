@@ -1,0 +1,101 @@
+	@PostMapping("/save")
+	public String saveEmployee(@ModelAttribute("employee") Employee theEmployee,
+			@ModelAttribute("salary") Salary salary, Model theModel, @RequestParam("file") MultipartFile img)
+			throws IOException {
+
+		if (!img.isEmpty()) {
+			try {
+
+				File saveFile = new ClassPathResource("static/css").getFile();
+				Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + img.getOriginalFilename());
+				System.out.println("----------------------------------------------------------" + path);
+				Files.copy(img.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+				theEmployee.setImage(img.getOriginalFilename());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		employeeService.save(theEmployee);
+		return "redirect:/employees/list";
+	}
+
+
+//show image
+
+<div class="row ">
+		<div class="col" th:each="tempEmployee: ${employees}">
+			<div class="card mt-5" style="width: 18rem;">
+				<img th:src="@{'/css/'+${tempEmployee.image}}" alt="Employee Image" class="card-img-top" />
+
+				<div class="card-body">
+					<h5 class="card-title" th:text="${tempEmployee.firstName + ' ' + tempEmployee.lastName}"></h5>
+					<p th:text="${tempEmployee.designation}"></p>
+					<p th:text="${tempEmployee.department}"></p>
+					<p th:text="${tempEmployee.email}"></p>
+				</div>
+
+				<ul class="list-group list-group-flush">
+					<div class="card-body row">
+						<div class="col-4">
+							Phone :
+
+						</div>
+						<div class="col-8">
+							<li class="list-group" th:text="${tempEmployee.phoneno}">>An item</li>
+						</div>
+					</div>
+					<hr>
+					<div class="card-body row">
+						<div class="col-4">
+							DOB :
+
+						</div>
+						<div class="col-8">
+							<li class="list-group" th:text="${tempEmployee.dob}">>A second item</li>
+						</div>
+					</div>
+					<hr>
+					<div class="card-body row">
+						<div class="col-4">
+							Gender :
+
+						</div>
+						<div class="col-8">
+							<li class="list-group" th:text="${tempEmployee.gender}">>An item</li>
+						</div>
+					</div>
+				</ul>
+
+				<div class="card-body row">
+					<div class="col-4">
+						<form action="#" th:action="@{/employees/showFormForUpdate}" method="POST">
+							<input type="hidden" name="employeeId" th:value="${tempEmployee.id}" />
+							<button type="submit" class="btn btn-info btn-sm">Update</button>
+
+						</form>
+
+					</div>
+					<div class="col-4" sec:authorize="hasRole('ADMIN')">
+						<form action="#" th:action="@{/employees/delete}" method="POST">
+
+							<input type="hidden" name="employeeId" th:value="${tempEmployee.id}" />
+							<button type="submit" class="btn btn-danger btn-sm"
+								onclick="if (!(confirm('Are you sure you want to delete this employee?'))) return false">
+								Delete
+							</button>
+
+						</form>
+					</div>
+					<div class="col-4" sec:authorize="hasRole('ADMIN')">
+						<form action="#" th:action="@{/employees/showMoreDetails}" method="POST">
+							<input type="hidden" name="employeeId" th:value="${tempEmployee.id}" />
+							<button type="submit" class="btn btn-success btn-sm">More...</button>
+
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
