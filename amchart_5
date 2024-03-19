@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Styles -->
+    <style>
+        #chartdiv {
+            width: 100%;
+            height: 500px;
+        }
+    </style>
+    <!-- Resources -->
+    <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+
+    <!-- Chart code -->
+    <script>
+        am5.ready(function () {
+
+
+            // Create root element
+            // https://www.amcharts.com/docs/v5/getting-started/#Root_element
+            var root = am5.Root.new("chartdiv");
+            root.dateFormatter.setAll({
+                dateFormat: "yyyy-MM-dd HH:mm",
+                dateFields: ["valueX", "openValueX"]
+            });
+
+
+            // Set themes
+            // https://www.amcharts.com/docs/v5/concepts/themes/
+            root.setThemes([
+                am5themes_Animated.new(root)
+            ]);
+
+
+            // Create chart
+            // https://www.amcharts.com/docs/v5/charts/xy-chart/
+            var chart = root.container.children.push(am5xy.XYChart.new(root, {
+                panX: false,
+                panY: false,
+                wheelX: "panX",
+                wheelY: "zoomX",
+                layout: root.verticalLayout,
+                paddingLeft: 0
+            }));
+
+
+            // Add legend
+            // https://www.amcharts.com/docs/v5/charts/xy-chart/legend-xy-series/
+            var legend = chart.children.push(am5.Legend.new(root, {
+                centerX: am5.p50,
+                x: am5.p50
+            }))
+
+            var colors = chart.get("colors");
+
+            // Data
+            var data = [{
+                "parking": "NB1",
+                "shipname": "PNS",
+                "shippresent": 2,
+                fromDate: "2018-01-01 00:00",
+                toDate: "2018-01-01 0:30",
+                columnSettings: {
+                    fill: am5.Color.brighten(colors.getIndex(0), 0)
+                }
+            }, {
+                "parking": "NB1",
+                "shipname": "PNS1",
+                "shippresent": 3,
+                fromDate: "2018-01-01 01:00",
+                toDate: "2018-01-01 02:00",
+                columnSettings: {
+                    fill: am5.Color.brighten(colors.getIndex(0), 0.4)
+                }
+            }, {
+                "parking": "NB1",
+                "shipname": "SEE",
+                "shippresent": 2,
+                fromDate: "2018-01-01 02:00",
+                toDate: "2018-01-01 03:00",
+                columnSettings: {
+                    fill: am5.Color.brighten(colors.getIndex(4), 0.8)
+                }
+            }, {
+                "parking": "NB4",
+                "shipname": "P2",
+                "shippresent": 1,
+                fromDate: "2018-01-01 00:00",
+                toDate: "2018-01-01 01:00",
+                columnSettings: {
+                    fill: am5.Color.brighten(colors.getIndex(2), 0)
+                }
+            }];
+
+
+            // Create axes
+            // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
+            var yAxis = chart.yAxes.push(
+                am5xy.CategoryAxis.new(root, {
+                    categoryField: "parking",
+                    renderer: am5xy.AxisRendererY.new(root, {
+                        inversed: true,
+                        minorGridEnabled: true
+                    }),
+                    tooltip: am5.Tooltip.new(root, {
+                        themeTags: ["axis"],
+                        animationDuration: 200
+                    })
+                })
+            );
+
+            let temp = Object.groupBy(data, ({ parking }) => parking);
+            let ar = []
+            for (key of Object.keys(temp)) {
+                ar.push({ parking: key });
+            }
+            /* yAxis.data.setAll([
+                { category: "John" },
+                { category: "Jane" },
+                { category: "Peter" },
+                { category: "Melania" },
+                { category: "Donald" }
+            ]); */
+            yAxis.data.setAll(ar);
+
+            var xAxis = chart.xAxes.push(
+                am5xy.DateAxis.new(root, {
+                    baseInterval: { timeUnit: "minute", count: 1 },
+                    visible: false,
+                    renderer: am5xy.AxisRendererX.new(root, {
+                        minorGridEnabled: false
+                    })
+                })
+            );
+
+
+            // Add series
+            // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
+            var series = chart.series.push(am5xy.ColumnSeries.new(root, {
+                xAxis: xAxis,
+                yAxis: yAxis,
+                openValueXField: "fromDate",
+                valueXField: "toDate",
+                categoryYField: "parking",
+                sequencedInterpolation: true
+            }));
+
+            series.columns.template.setAll({
+                templateField: "columnSettings",
+                strokeOpacity: 0,
+                //tooltipText: "{shipname}, {shippresent}"
+            });
+
+            series.bullets.push(function () {
+                return am5.Bullet.new(root, {
+                    sprite: am5.Label.new(root, {
+                        text: "{shipname}, {shippresent}",
+                        fill: root.interfaceColors.get("alternativeText"),
+                        centerY: am5.p50,
+                        centerX: am5.p50,
+                        populateText: true
+                    })
+                });
+            });
+
+            series.data.processor = am5.DataProcessor.new(root, {
+                dateFields: ["fromDate", "toDate"],
+                dateFormat: "yyyy-MM-dd HH:mm"
+            });
+            series.data.setAll(data);
+
+            // Add scrollbars
+            chart.set("scrollbarX", am5.Scrollbar.new(root, {
+                orientation: "horizontal"
+            }));
+
+            // Make stuff animate on load
+            // https://www.amcharts.com/docs/v5/concepts/animations/
+            series.appear();
+            chart.appear(1000, 100);
+
+        }); // end am5.ready()
+    </script>
+
+</head>
+
+<body>
+    <div id="chartdiv"></div>
+</body>
+
+</html>
