@@ -13,12 +13,14 @@
         }
     </style>
     <!-- Resources -->
-    <script src="./amcharts5/index.js"></script>
+<!--     <script src="./amcharts5/index.js"></script>
     <script src="./amcharts5/xy.js"></script>
-    <script src="./amcharts5/themes/Animated.js"></script>
-
+    <script src="./amcharts5/themes/Animated.js"></script> -->
+    <script th:src="@{amcharts5/index.js}"></script>
+    <script th:src="@{amcharts5/xy.js}"></script>
+    <script th:src="@{amcharts5/themes/Animated.js}"></script>
     <!-- Chart code -->
-    <script src="./amchart.js">
+    <script th:src="@{js/amchart.js}"></script>
     </script>
 
 </head>
