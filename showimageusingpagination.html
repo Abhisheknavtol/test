@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery with Pagination</title>
+    <style>
+        /* CSS for gallery */
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .gallery img {
+            width: 200px;
+            height: 150px;
+            margin: 10px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            margin: 0 5px;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="gallery" id="imageGallery">
+        <!-- Images will be added here dynamically -->
+    </div>
+
+    <div class="pagination" id="pagination">
+        <!-- Pagination buttons will be added here dynamically -->
+    </div>
+
+    <script>
+        // Sample image URLs
+        const imageUrls = [
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/200/300',
+            'https://picsum.photos/200/300',
+        ];
+
+        const imagesPerPage = 1;
+        let currentPage = 1;
+
+        // Function to display images on the current page
+        function displayImages(page) {
+            const startIndex = (page - 1) * imagesPerPage;
+            const endIndex = startIndex + imagesPerPage;
+            const gallery = document.getElementById('imageGallery');
+            gallery.innerHTML = ''; // Clear existing images
+
+            for (let i = startIndex; i < endIndex && i < imageUrls.length; i++) {
+                const img = document.createElement('img');
+                img.src = imageUrls[i];
+                gallery.appendChild(img);
+            }
+        }
+
+        // Function to generate pagination buttons
+        function generatePagination() {
+            const totalPages = Math.ceil(imageUrls.length / imagesPerPage);
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = ''; // Clear existing pagination
+
+            for (let i = 1; i <= totalPages; i++) {
+                const button = document.createElement('button');
+                button.textContent = i;
+                button.addEventListener('click', () => {
+                    currentPage = i;
+                    displayImages(currentPage);
+                });
+                pagination.appendChild(button);
+            }
+        }
+
+        // Initial display
+        displayImages(currentPage);
+        generatePagination();
+    </script>
+</body>
+
+</html>
