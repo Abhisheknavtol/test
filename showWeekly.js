@@ -271,8 +271,19 @@ function handleData() {
   ];
 
   let result = [];
-  let tempData = Object.groupBy(tableData, ({ date }) => date);
+  //   let tempData = Object.groupBy(tableData, ({ date }) => date);
+  let tempData = {};
   let names = [];
+
+  for (obj of tableData) {
+    if (tempData.hasOwnProperty(obj.date)) {
+      tempData[obj.date].push(obj);
+    } else {
+      tempData[obj.date] = [obj];
+    }
+  }
+
+  console.log(tempData);
 
   for (date of Object.keys(tempData)) {
     let temp = { date };
