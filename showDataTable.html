@@ -29,6 +29,11 @@
 </head>
 
 <body>
+    <div>
+        <input type="date" id="from" />
+        <input type="date" id="to" />
+        <button onclick="loadData()">Submit</button>
+    </div>
     <div id="chartdiv">
         <table id="table" class="table table-striped">
         </table>
@@ -40,53 +45,256 @@
             "shipname": "S1",
             "date": "09-04-2024",
             "shipcount": "2",
-            "portname": "NB1",
+            "portname": "NB1"
         },
         {
             "shipname": "S2",
             "date": "09-04-2024",
             "shipcount": "3",
-            "portname": "NB1",
+            "portname": "NB1"
         },
         {
             "shipname": "SP1",
             "date": "09-04-2024",
             "shipcount": "1",
-            "portname": "NB2",
+            "portname": "NB2"
         },
         {
             "shipname": "S1",
             "date": "09-04-2024",
             "shipcount": "5",
-            "portname": "NB2",
+            "portname": "NB2"
         },
         {
             "shipname": "PO1",
             "date": "08-04-2024",
             "shipcount": "3",
-            "portname": "NB1",
+            "portname": "NB1"
         },
         {
             "shipname": "D2",
             "date": "08-04-2024",
             "shipcount": "1",
-            "portname": "NB1",
+            "portname": "NB1"
         },
         {
             "shipname": "S11",
             "date": "08-04-2024",
             "shipcount": "4",
-            "portname": "NB2",
+            "portname": "NB2"
         },
         {
             "shipname": "S1",
             "date": "08-04-2024",
             "shipcount": "5",
-            "portname": "NB2",
+            "portname": "NB2"
         },
-    ]
+        {
+            "shipname": "S1",
+            "date": "07-04-2024",
+            "shipcount": "2",
+            "portname": "NB1"
+        },
+        {
+            "shipname": "S2",
+            "date": "07-04-2024",
+            "shipcount": "3",
+            "portname": "NB1"
+        },
+        {
+            "shipname": "SP1",
+            "date": "07-04-2024",
+            "shipcount": "1",
+            "portname": "NB2"
+        },
+        {
+            "shipname": "S1",
+            "date": "07-04-2024",
+            "shipcount": "5",
+            "portname": "NB2"
+        },
+        {
+            "shipname": "PO1",
+            "date": "06-04-2024",
+            "shipcount": "3",
+            "portname": "NB1"
+        },
+        {
+            "shipname": "D2",
+            "date": "06-04-2024",
+            "shipcount": "1",
+            "portname": "NB1"
+        },
+        {
+            "shipname": "S11",
+            "date": "06-04-2024",
+            "shipcount": "4",
+            "portname": "NB2"
+        },
+        {
+            "shipname": "S1",
+            "date": "06-04-2024",
+            "shipcount": "5",
+            "portname": "NB2"
+        },
+        {
+            "shipname": "PO1",
+            "date": "05-04-2024",
+            "shipcount": "3",
+            "portname": "NB1"
+        },
+        {
+            "shipname": "D2",
+            "date": "05-04-2024",
+            "shipcount": "1",
+            "portname": "NB1"
+        },
+        {
+            "shipname": "S11",
+            "date": "05-04-2024",
+            "shipcount": "4",
+            "portname": "NB2"
+        },
+        {
+            "shipname": "S1",
+            "date": "05-04-2024",
+            "shipcount": "5",
+            "portname": "NB2"
+        },
+        {
+            "shipname": "PO1",
+            "date": "04-04-2024",
+            "shipcount": "3",
+            "portname": "NB1"
+        },
+        {
+            "shipname": "D2",
+            "date": "04-04-2024",
+            "shipcount": "1",
+            "portname": "NB1"
+        },
+        {
+            "shipname": "S11",
+            "date": "04-04-2024",
+            "shipcount": "4",
+            "portname": "NB2"
+        },
+        {
+            "shipname": "S1",
+            "date": "04-04-2024",
+            "shipcount": "5",
+            "portname": "NB2"
+        },
+        {
+            "shipname": "PO1",
+            "date": "03-04-2024",
+            "shipcount": "3",
+            "portname": "NB1"
+        },
+        {
+            "shipname": "D2",
+            "date": "03-04-2024",
+            "shipcount": "1",
+            "portname": "NB1"
+        },
+        {
+            "shipname": "S11",
+            "date": "03-04-2024",
+            "shipcount": "4",
+            "portname": "NB2"
+        },
+        {
+            "shipname": "S1",
+            "date": "03-04-2024",
+            "shipcount": "5",
+            "portname": "NB2"
+        },
+        {
+            "shipname": "PO1",
+            "date": "02-04-2024",
+            "shipcount": "3",
+            "portname": "NB1"
+        },
+        {
+            "shipname": "D2",
+            "date": "02-04-2024",
+            "shipcount": "1",
+            "portname": "NB1"
+        },
+        {
+            "shipname": "S11",
+            "date": "02-04-2024",
+            "shipcount": "4",
+            "portname": "NB2"
+        },
+        {
+            "shipname": "S1",
+            "date": "02-04-2024",
+            "shipcount": "5",
+            "portname": "NB2"
+        },
+        {
+            "shipname": "PO1",
+            "date": "01-04-2024",
+            "shipcount": "3",
+            "portname": "NB1"
+        },
+        {
+            "shipname": "D2",
+            "date": "01-04-2024",
+            "shipcount": "1",
+            "portname": "NB1"
+        },
+        {
+            "shipname": "S11",
+            "date": "01-04-2024",
+            "shipcount": "4",
+            "portname": "NB2"
+        },
+        {
+            "shipname": "S1",
+            "date": "01-04-2024",
+            "shipcount": "5",
+            "portname": "NB2"
+        },
+        {
+            "shipname": "PO1",
+            "date": "10-04-2024",
+            "shipcount": "3",
+            "portname": "NB1"
+        },
+        {
+            "shipname": "D2",
+            "date": "10-04-2024",
+            "shipcount": "1",
+            "portname": "NB1"
+        },
+        {
+            "shipname": "S11",
+            "date": "10-04-2024",
+            "shipcount": "4",
+            "portname": "NB2"
+        },
+        {
+            "shipname": "S1",
+            "date": "10-04-2024",
+            "shipcount": "5",
+            "portname": "NB2"
+        }
+    ];
 
-    showDataTable(data)
+    function loadData() {
+        const from = $("#from").val();
+        const to = $("#to").val();
+
+        let innerContent = `<table id="table" class="table table-striped">
+        </table>`;
+
+        $("#chartdiv").html(innerContent)
+        if (from && to) {
+            showDataTable(data, from, to)
+        }
+    }
 
 </script>
 
