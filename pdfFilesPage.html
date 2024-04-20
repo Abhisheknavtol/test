@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>List of PDF Files</title>
+</head>
+<body>
+    <h1>List of PDF Files</h1>
+    <ul>
+        <li th:each="pdfFile : ${pdfFiles}">
+            <span th:text="${pdfFile.name}"></span>
+            <a th:href="@{'/employees/files/' + ${pdfFile.url.substring(pdfFile.url.lastIndexOf('/') + 1)}}">Download</a>
+        </li>
+    </ul>
+    
+     <script th:inline="javascript">
+        function extractId(url) {
+            var parts = url.split('/');
+            return parts[parts.length - 1];
+        }
+    </script>
+</body>
+</html>
