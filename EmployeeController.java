@@ -232,3 +232,4 @@ public class EmployeeController {
 	}
 
 }
+https://www.bezkoder.com/spring-boot-upload-file-database/
