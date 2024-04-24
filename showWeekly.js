@@ -50,7 +50,7 @@ function handleData() {
       ship_name: "S1",
       date: "09-04-2024",
       ship_present: "5",
-      portname: "BB1",
+      portname: "BB2",
     },
     {
       ship_name: "PO1",
@@ -283,20 +283,18 @@ function handleData() {
     }
   }
 
-  console.log(tempData);
-
   for (date of Object.keys(tempData)) {
     let temp = { date };
     for (content of tempData[date]) {
-      if (!names.includes(content.ship_name)) {
-        names.push(content.ship_name);
+      let index = `${content.ship_name}\n${content.portname}`;
+      if (!names.includes(index)) {
+        names.push(index);
       }
-      temp[content.ship_name] = parseInt(content.ship_present);
-      temp[content.portname] = content.portname;
+      temp[index] = parseInt(content.ship_present);
     }
     result.push(temp);
   }
-
+  console.log(result);
   showWeeklyChart(result, names);
 }
 
@@ -372,7 +370,7 @@ function showWeeklyChart(data, names) {
       );
 
       series.columns.template.setAll({
-        tooltipText: "{name}, {valueY}",
+        tooltipText: "Ship Name - {name},\nCount - {valueY}",
         tooltipY: am5.percent(10),
       });
       series.data.setAll(data);
