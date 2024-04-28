@@ -1,0 +1,22 @@
+// Array to store the selected values
+let selectedValues = [];
+
+// Function to handle checkbox change event
+function handleCheckboxChange(checkbox) {
+  const value = checkbox.value;
+
+  // If the checkbox is checked, add the value to the array
+  if (checkbox.checked) {
+    selectedValues.push(value);
+  }
+  // If the checkbox is unchecked, remove the value from the array
+  else {
+    const index = selectedValues.indexOf(value);
+    if (index !== -1) {
+      selectedValues.splice(index, 1);
+    }
+  }
+
+  // You can log the updated selectedValues array for demonstration
+  console.log('Selected Values:', selectedValues);
+}
