@@ -15,8 +15,9 @@ function showDataTable(data, from, to) {
   data.forEach((record) => {
     let currDate = new Date(changeDate(record.date));
     if (currDate >= fromDate && currDate <= toDate) {
-      if (!dates.includes(record.date)) {
-        dates.push(record.date);
+      let d = `${record.date} ${record.time}`;
+      if (!dates.includes(d)) {
+        dates.push(d);
       }
       let cell = `<strong>${record.shipcount} x ${record.shipname}</strong>`;
       if (record.remarks) {
@@ -25,19 +26,19 @@ function showDataTable(data, from, to) {
       if (result.hasOwnProperty(record.portname + "-" + record.state)) {
         if (
           result[record.portname + "-" + record.state].hasOwnProperty(
-            record.date
+            d
           )
         ) {
-          result[record.portname + "-" + record.state][record.date].push(cell);
+          result[record.portname + "-" + record.state][d].push(cell);
         } else {
-          result[record.portname + "-" + record.state][record.date] = [cell];
+          result[record.portname + "-" + record.state][d] = [cell];
           result[record.portname + "-" + record.state].state = record.state;
           result[record.portname + "-" + record.state].portname =
             record.portname;
         }
       } else {
         let tempObj = {};
-        tempObj[record.date] = [cell];
+        tempObj[d] = [cell];
         tempObj.state = record.state;
         tempObj.portname = record.portname;
         result[record.portname + "-" + record.state] = tempObj;
@@ -45,6 +46,7 @@ function showDataTable(data, from, to) {
     }
   });
 
+  console.log(dates);
   console.log(result);
 
   flag = Object.keys(result).length > 0 ? true : false;
