@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>File Upload</h1>
+    <input type="file" id="fileInput" multiple>
+    <button id="uploadBtn">Upload Files</button>
+    <div id="statusMsg"></div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="scripts.js"></script>
+</body>
+</html>
+
+------------------------
+Javascript code
+
+$(document).ready(function () {
+    $("#uploadBtn").on("click", function () {
+        const files = $("#fileInput")[0].files;
+        const formData = new FormData();
+        for (let i = 0; i < files.length; i++) {
+            formData.append("files", files[i]);
+        }
+        $.ajax({
+            url: "/upload",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function () {
+                $("#statusMsg").text("Files uploaded successfully.");
+            },
+            error: function (error) {
+                $("#statusMsg").text("Error uploading files: " + error.responseText);
+            }
+        });
+    });
+});
+
+
+-------------------------------------------
+
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
+public class Document {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String fileName;
+
+    // Other fields as needed
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+}
+
+
+
+----------------------------------------
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+@RestController
+public class FileUploadController {
+
+    @Autowired
+    private DocumentRepository documentRepository;
+
+    @PostMapping("/upload")
+    public String handleFileUpload(@RequestParam("files") MultipartFile[] files) {
+        try {
+            List<Document> documents = new ArrayList<>();
+            for (MultipartFile file : files) {
+                file.transferTo(new File("path/to/document/folder/" + file.getOriginalFilename()));
+                Document document = new Document();
+                document.setFileName(file.getOriginalFilename());
+                // Set other fields if needed
+                documents.add(document);
+            }
+            documentRepository.saveAll(documents);
+            return "Files uploaded successfully.";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Error uploading files: " + e.getMessage();
+        }
+    }
+}
+
+----------------------------------------------------
+
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface DocumentRepository extends JpaRepository<Document, Long> {
+}
