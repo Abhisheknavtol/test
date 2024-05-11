@@ -1,0 +1,152 @@
+<div>
+		<table class="table table-striped" id="myTable">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>Email</th>
+					<th>Phone No.</th>
+					<th>Designation</th>
+					<th>Department</th>
+					<th>DOB</th>
+					<th>Gender</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+
+			</tbody>
+		</table>
+	</div>
+
+
+<!-- Button to toggle form visibility -->
+<button id="showFormBtn">Add Employee</button>
+
+<form id="employeeForm" action="/employees/add" method="post">
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" name="firstName" required><br>
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" name="lastName" required><br>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required><br>
+    <!-- Add more fields as needed -->
+    <button type="submit">Add Employee</button>
+</form>
+
+
+	<div id="myDiv">
+
+	</div>
+
+	<script>
+		
+		  document.getElementById('showFormBtn').addEventListener('click', function() {
+        // Toggle the visibility of the form
+        var form = document.getElementById('employeeForm');
+        form.style.display = (form.style.display === 'none') ? 'block' : 'none';
+    });
+
+		window.onload = myfunction;
+
+		function myfunction() {
+			var myTable = $("#myTable tbody");
+			$.ajax({
+				url: "list1",
+				type: "GET",
+				dataType: "json",
+				contentType: "application/json",
+				success: function (result) {
+					result.forEach(element => {
+						var row = "<tr>" +
+							"<td>" + element.id + "</td>" +
+							"<td>" + element.first_name + "</td>" +
+							"<td>" + element.last_name + "</td>" +
+							"<td>" + element.phone_no + "</td>" +
+							"<td>" + element.department + "</td>" +
+							"<td>" + element.designation + "</td>" +
+							"<td>" + element.email + "</td>" +
+							"<td>" + element.dob + "</td>" +
+							"<td>" + element.gender + "</td>" +
+							"<td><button class='updateBtn' data-id='" + element.id + "'>Update</button><button class='deleteBtn' data-id='" + element.id + "'>Delete</button></td>" +
+							"</tr>";
+						myTable.append(row);
+					});
+
+
+					// Add click event listener to update button
+					$(".updateBtn").click(function () {
+						var userId = $(this).data("id");
+						// Use userId to fetch user data from the server
+						$.ajax({
+							url: "getUserDetails", // Endpoint to fetch user details by ID
+							type: "GET",
+							dataType: "json",
+							data: {id: userId},
+							success: function (userDetails) {
+								console.log(userDetails)
+								var updateForm = "<form id='updateForm'>" +
+									"<input type='hidden' name='id' value='" + userDetails.id + "'><br>" +
+									"<input type='text' name='first_name' value='" + userDetails.first_name + "'><br>" +
+									"<input type='text' name='last_name' value='" + userDetails.last_name + "'><br>" +
+									"<input type='text' name='phone_no' value='" + userDetails.phone_no + "'><br>" +
+									"<input type='text' name='department' value='" + userDetails.department + "'><br>" +
+									"<input type='text' name='designation' value='" + userDetails.designation + "'><br>" +
+									"<input type='text' name='email' value='" + userDetails.email + "'><br>" +
+									"<input type='date' name='dob' value='" + userDetails.dob + "'><br>" +
+									"<input type='text' name='gender' value='" + userDetails.gender + "'><br>" +
+									"<button type='button' id='finalUpdateBtn'>Final Update</button>" +
+									"</form>";
+								$("#myDiv").html(updateForm); // Replace the row content with the form
+							},
+							error: function (err) {
+								console.error(err);
+							}
+						});
+					});
+
+					$(document).on("click", "#finalUpdateBtn", function () {
+						var formData = $("#updateForm").serialize(); // Serialize form data
+						$.ajax({
+							url: "/employees/updateUser", // Endpoint to update user details
+							type: "POST",
+							data: formData,
+							success: function (response) {
+								alert("Done");
+							},
+							error: function (err) {
+								console.error(err);
+							}
+						});
+					});
+
+
+					// Add click event listener to delete button
+					$(".deleteBtn").click(function () {
+						var userId = $(this).data("id");
+						$.ajax({
+							url: "/employees/delete123",
+							type: "POST",
+							data: {id: userId},
+							success: function (response) {
+								// Remove the row from the table upon successful deletion
+								
+								alert("Employee record deleted successfully");
+							},
+							error: function (err) {
+								console.error("Error deleting employee record:", err);
+								alert("Failed to delete employee record");
+							}
+						});
+					});
+				},
+				error: function (err) {
+					// check the err for error details
+				}
+			});
+		}
+
+
+
+	</script>

@@ -1,0 +1,49 @@
+@GetMapping("/list1")
+	@ResponseBody
+	public List<Map<String, Object>> listEmployees1(Model theModel) {
+
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		System.out.println(auth.getPrincipal());
+
+		String q = "select * from employee_management_system";
+
+		List<Map<String, Object>> theEmployees = jdbcTemplate.queryForList(q);
+
+		theModel.addAttribute("employees", theEmployees);
+		return theEmployees;
+	}
+
+	@RequestMapping(value = "/getUserDetails", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Map<String, Object> getUserDetails(@RequestParam("id") int id) {
+		String query = "SELECT * FROM employee_management_system WHERE id = ?";
+		Map<String, Object> userDetails = jdbcTemplate.queryForMap(query, id);
+		return userDetails;
+	}
+
+	@RequestMapping(value = "/updateUser", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public String updateUser() {
+		String query = "UPDATE employee_management_system SET first_name=?, last_name=?, email=?, department=?, designation=?, phone_no=?, gender=?, dob=? WHERE id=?";
+		System.out.println("In update");
+		return "User details updated successfully";
+	}
+	
+	@PostMapping("/delete123")
+	 public String deleteEmployee(@RequestParam("id") int id) {
+		 String query = "DELETE FROM employee_management_system WHERE id = ?";
+		   jdbcTemplate.update(query, id);
+	        return "redirect:/employees/list";
+	    }
+	
+	  @PostMapping("/employees/add")
+	    public String addEmployee(@RequestParam("firstName") String firstName,
+	                              @RequestParam("lastName") String lastName,
+	                              @RequestParam("email") String email) {
+	        // Execute SQL query to insert data into the database
+	        String query = "INSERT INTO employees (first_name, last_name, email) VALUES (?, ?, ?)";
+	        jdbcTemplate.update(query, firstName, lastName, email);
+	        
+	        // Redirect to a success page or display a success message
+	        return "redirect:/employees/list";
+	    }
