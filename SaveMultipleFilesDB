@@ -1,0 +1,115 @@
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+public class YourEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // Property to hold multiple file paths
+    @ElementCollection
+    private List<String> filePaths = new ArrayList<>();
+
+    // Other properties, constructors, getters, and setters...
+
+    public YourEntity() {
+        // Constructor
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<String> getFilePaths() {
+        return filePaths;
+    }
+
+    public void setFilePaths(List<String> filePaths) {
+        this.filePaths = filePaths;
+    }
+}
+
+
+----------------------------
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.beans.factory.annotation.Autowired;
+import java.io.File;
+import java.io.IOException;
+
+@Controller
+public class FileUploadController {
+
+    @Autowired
+    private YourEntityRepository repository;
+
+    @GetMapping("/upload")
+    public String showUploadForm(Model model) {
+        model.addAttribute("entity", new YourEntity());
+        return "uploadForm";
+    }
+
+    @PostMapping("/upload")
+    public String handleFileUpload(@ModelAttribute YourEntity entity,
+                                   @RequestParam("files") MultipartFile[] files) throws IOException {
+        for (MultipartFile file : files) {
+            String filePath = "/path/to/uploaded/files/" + file.getOriginalFilename();
+            File dest = new File(filePath);
+            file.transferTo(dest);
+            entity.getFilePaths().add(filePath);
+        }
+        repository.save(entity);
+        return "redirect:/";
+    }
+}
+
+
+-----------------
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>File Upload Form</title>
+</head>
+<body>
+    <h2>Upload Files</h2>
+    <form th:action="@{/upload}" th:object="${entity}" method="post" enctype="multipart/form-data">
+        <input type="file" name="files" multiple="multiple"><br><br>
+        <button type="submit">Upload</button>
+    </form>
+</body>
+</html>
+
+
+
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+
+@Configuration
+public class FileStorageConfiguration {
+
+    @Value("${file.upload-dir}")
+    private String fileUploadDir;
+
+    @Bean
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+        resolver.setDefaultEncoding("utf-8");
+        resolver.setMaxUploadSizePerFile(5242880); // 5MB
+        return resolver;
+    }
+}
+
+
