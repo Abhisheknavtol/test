@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Styles -->
+    <style>
+        #chartdiv {
+            width: 100%;
+            height: 500px;
+        }
+    </style>
+    <link rel="stylesheet" href="./dataTables.css" />
+    <link rel="stylesheet" href="./dataTables.bootstrap5.css" />
+    <!-- Resources -->
+    <script src="./jquery.js"></script>
+    <script src="./dataTables.js"></script>
+
+    <script src="./dataTables.buttons.js"></script>
+    <script src="./buttons.dataTables.js"></script>
+    <script src="./jszip.min.js"></script>
+    <script src="./pdfmake.min.js"></script>
+
+    <script src="./vfs_fonts.js"></script>
+
+    <script src="./buttons.html5.min.js"></script>
+    <script src="./buttons.print.min.js"></script>
+
+
+
+    <script src="./dataTable.js"></script>
+
+</head>
+
+<body>
+
+
+    <div class="row mt-5">
+        <div class="col-3">
+            <input type="date" id="from" class="form-control" />
+        </div>
+        <div class="col-3">
+            <input type="date" id="to" class="form-control" />
+        </div>
+        <div class="col-3">
+            <button onclick="loadData()" class="btn btn-secondary">Submit</button>
+        </div>
+    </div>
+
+    <div id="chartdiv" class="container-fluid">
+        <table id="table" class="table table-striped">
+        </table>
+    </div>
+</body>
+<script>
+    let data = [
+        {
+            "shipname": "S1",
+            "date": "09-05-2024", "time": "11:00", "remarks": "",
+            "shiptotal": "6", "shipcount": "2",
+            "portname": "NB1"
+            , "state": "Lahore"
+        },
+        {
+            "shipname": "S1",
+            "date": "09-05-2024", "time": "16:00", "remarks": "ok",
+            "shiptotal": "6", "shipcount": "3",
+            "portname": "NB1"
+            , "state": "Lahore"
+        },
+        {
+            "shipname": "S2",
+            "date": "09-05-2024", "time": "11:00", "remarks": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
+            "shiptotal": "6", "shipcount": "3",
+            "portname": "NB1"
+            , "state": "karachi"
+        },
+        {
+            "shipname": "SP1",
+            "date": "09-05-2024", "time": "11:00", "remarks": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
+            "shiptotal": "6", "shipcount": "1",
+            "portname": "NB2"
+            , "state": "karachi"
+        },
+        {
+            "shipname": "S1",
+            "date": "09-05-2024", "time": "11:00", "remarks": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
+            "shiptotal": "6", "shipcount": "5",
+            "portname": "NB2"
+            , "state": "karachi"
+        },
+        {
+            "shipname": "PO1",
+            "date": "08-05-2024", "time": "11:00", "remarks": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
+            "shiptotal": "6", "shipcount": "3",
+            "portname": "NB1"
+            , "state": "karachi"
+        },
+        {
+            "shipname": "PO11",
+            "date": "08-05-2024", "time": "16:00", "remarks": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
+            "shiptotal": "6", "shipcount": "1",
+            "portname": "NB1"
+            , "state": "karachi"
+        },
+        {
+            "shipname": "D2",
+            "date": "08-05-2024", "time": "11:00", "remarks": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
+            "shiptotal": "6", "shipcount": "1",
+            "portname": "NB1"
+            , "state": "karachi"
+        },
+        {
+            "shipname": "S11",
+            "date": "08-05-2024", "time": "11:00", "remarks": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
+            "shiptotal": "6", "shipcount": "4",
+            "portname": "NB2"
+            , "state": "karachi"
+        },
+        {
+            "shipname": "S1",
+            "date": "08-05-2024", "time": "11:00", "remarks": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
+            "shiptotal": "6", "shipcount": "5",
+            "portname": "NB2"
+            , "state": "karachi"
+        },
+        {
+            "shipname": "S1",
+            "date": "07-05-2024", "time": "11:00", "remarks": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
+            "shiptotal": "6", "shipcount": "2",
+            "portname": "NB1"
+            , "state": "karachi"
+        },
+        {
+            "shipname": "S2",
+            "date": "07-05-2024", "time": "11:00", "remarks": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
+            "shiptotal": "6", "shipcount": "3",
+            "portname": "NB1"
+            , "state": "karachi"
+        },
+        {
+            "shipname": "SP1",
+            "date": "07-05-2024", "time": "11:00", "remarks": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
+            "shiptotal": "6", "shipcount": "1",
+            "portname": "NB2"
+            , "state": "karachi"
+        },
+        {
+            "shipname": "S1",
+            "date": "07-05-2024", "time": "11:00", "remarks": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
+            "shiptotal": "6", "shipcount": "5",
+            "portname": "NB2"
+            , "state": "karachi"
+        },
+        {
+            "shipname": "PO1",
+            "date": "06-05-2024", "time": "11:00", "remarks": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
+            "shiptotal": "6", "shipcount": "3",
+            "portname": "NB1"
+            , "state": "karachi"
+        },
+        {
+            "shipname": "D2",
+            "date": "06-05-2024", "time": "11:00", "remarks": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
+            "shiptotal": "6", "shipcount": "1",
+            "portname": "NB1"
+            , "state": "karachi"
+        }
+    ];
+
+    function loadData() {
+        const from = $("#from").val();
+        const to = $("#to").val();
+
+        let innerContent = `<table id="table" class="table table-striped">
+        </table>`;
+
+        $("#chartdiv").html(innerContent)
+        /*
+        if (from && to) {
+            showDataTable(data, from, to)
+        }
+        */
+        showDataTable(data, '2024-05-06', '2024-05-10')
+    }
+
+</script>
+
+</html>
