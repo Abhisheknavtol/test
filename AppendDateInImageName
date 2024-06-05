@@ -1,0 +1,28 @@
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class FilenameAppender {
+
+    public static void main(String[] args) {
+        String originalFileName = "abhishek.jpg";
+        String newFileName = appendDateToFileName(originalFileName);
+        System.out.println("Original Filename: " + originalFileName);
+        System.out.println("New Filename: " + newFileName);
+    }
+
+    private static String appendDateToFileName(String fileName) {
+        String datePattern = "yyyy-MM-dd"; // Define the date pattern you want
+        SimpleDateFormat sdf = new SimpleDateFormat(datePattern);
+        String currentDate = sdf.format(new Date()); // Get current date as string
+
+        int dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex == -1) {
+            // If there's no extension, just append the date
+            return fileName + "_" + currentDate;
+        }
+
+        String name = fileName.substring(0, dotIndex);
+        String extension = fileName.substring(dotIndex);
+        return name + "_" + currentDate + extension;
+    }
+}
