@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Viewer</title>
+    <!-- FancyBox CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" />
+    <!-- FancyBox JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .video-link {
+            display: block;
+            margin: 10px 0;
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .video-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Video Viewer</h1>
+    <div id="videoLinks">
+        <!-- Example dynamic video links -->
+        <a href="https://www.youtube.com/watch?v=ScMzIvxBSi4" class="video-link" data-fancybox="gallery">Video 1</a>
+        <a href="https://vimeo.com/123456789" class="video-link" data-fancybox="gallery">Video 2</a>
+    </div>
+
+    <script>
+    $(document).ready(function() {
+        // Initialize FancyBox for video links
+        $('[data-fancybox="gallery"]').fancybox({
+            buttons : [ 
+                'slideShow',
+                'share',
+                'zoom',
+                'fullScreen',
+                'close'
+            ],
+            youtube : {
+                controls : 1,
+                showinfo : 0
+            },
+            vimeo : {
+                color : 'f00'
+            }
+        });
+
+        
+    });
+    </script>
+</body>
+</html>
