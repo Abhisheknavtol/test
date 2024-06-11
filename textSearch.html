@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Search Feature</title>
+    <style>
+        .highlight {
+            background-color: yellow;
+        }
+        #textContent {
+            max-height: 200px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <input type="text" id="searchInput" placeholder="Search text...">
+    <button id="clearButton">Clear</button>
+    
+    <div id="textContent">
+        <p>This is a sample text. This text is used for testing the text search feature. Feel free to add more text here.</p>
+        <p>Another paragraph with more text. This paragraph also contains some searchable text.</p>
+        <p>Yet another piece of text to search through. Adding more paragraphs makes the search feature more comprehensive.</p>
+        <p>This is a sample text. This text is used for testing the text search feature. Feel free to add more text here.</p>
+        <p>Another paragraph with more text. This paragraph also contains some searchable text.</p>
+        <p>Yet another piece of text to search through. Adding more paragraphs makes the search feature more comprehensive.</p>    
+        <p>This is a sample text. This text is used for testing the text search feature. Feel free to add more text here.</p>
+        <p>Another paragraph with more text. This paragraph also contains some searchable text.</p>
+        <p>Yet another piece of text to search through. Adding more paragraphs makes the search feature more comprehensive.</p>
+        <p>This is a sample text. This text is used for testing the text search feature. Feel free to add more text here.</p>
+        <p>Another paragraph with more text. This paragraph also contains some searchable text.</p>
+        <p>Yet another piece of text to search Abhishek. Adding more paragraphs makes the search feature more comprehensive.</p>
+    </div>
+    
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('searchInput');
+    const clearButton = document.getElementById('clearButton');
+    const textContent = document.getElementById('textContent');
+
+    searchInput.addEventListener('input', () => {
+        clearHighlights();
+        const searchTerm = searchInput.value.trim().toLowerCase();
+        if (searchTerm) {
+            highlightText(searchTerm);
+            scrollToAndSelectFirstOccurrence();
+        }
+    });
+
+    clearButton.addEventListener('click', clearHighlights);
+
+    function highlightText(searchTerm) {
+        const regex = new RegExp(`(${searchTerm})`, 'gi');
+        const paragraphs = textContent.getElementsByTagName('p');
+
+        Array.from(paragraphs).forEach(paragraph => {
+            paragraph.innerHTML = paragraph.textContent.replace(regex, '<span class="highlight">$1</span>');
+        });
+    }
+
+    function clearHighlights() {
+        const highlightedElements = textContent.querySelectorAll('.highlight');
+        highlightedElements.forEach(element => {
+            const textNode = document.createTextNode(element.textContent);
+            element.parentNode.replaceChild(textNode, element);
+        });
+    }
+
+    function scrollToAndSelectFirstOccurrence() {
+        const firstHighlight = textContent.querySelector('.highlight');
+        if (firstHighlight) {
+            firstHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            const range = document.createRange();
+            range.selectNodeContents(firstHighlight);
+
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+    }
+});
+    </script>
+</body>
+</html>
