@@ -1,0 +1,230 @@
+package com.example.carmanagement.model;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+
+@Entity
+public class ShipMaster {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String carName;
+    private String carType;
+    private String country;
+    private LocalDate addedDate;
+
+    // Getters and Setters
+}
+
+
+package com.example.carmanagement.model;
+
+import javax.persistence.*;
+
+@Entity
+public class ShipCount {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String carName;
+    private String country;
+    private String originalCountry;
+    private int count;
+    private int remainingCount;
+
+    // Getters and Setters
+}
+
+
+package com.example.carmanagement.repository;
+
+import com.example.carmanagement.model.ShipMaster;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.time.LocalDate;
+import java.util.List;
+
+public interface ShipMasterRepository extends JpaRepository<ShipMaster, Long> {
+    List<ShipMaster> findByCountry(String country);
+
+    @Query("SELECT s FROM ShipMaster s WHERE s.country = :country AND (s.addedDate = :today OR s.addedDate IS NULL)")
+    List<ShipMaster> findCarsByCountryAndDate(String country, LocalDate today);
+
+    List<ShipMaster> findByCountryNot(String country);
+}
+
+
+
+
+
+package com.example.carmanagement.service;
+
+import com.example.carmanagement.model.ShipMaster;
+import com.example.carmanagement.model.ShipCount;
+import com.example.carmanagement.repository.ShipMasterRepository;
+import com.example.carmanagement.repository.ShipCountRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Service
+public class CarService {
+    @Autowired
+    private ShipMasterRepository shipMasterRepository;
+
+    @Autowired
+    private ShipCountRepository shipCountRepository;
+
+    public List<ShipMaster> getAllCarsForCountry(String country) {
+        return shipMasterRepository.findCarsByCountryAndDate(country, LocalDate.now());
+    }
+
+    public List<ShipMaster> getCarsFromOtherCountries(String primaryCountry) {
+        return shipMasterRepository.findByCountryNot(primaryCountry);
+    }
+
+    public void addCarToCountry(Long carId, String primaryCountry, int count) {
+        ShipMaster car = shipMasterRepository.findById(carId).orElseThrow(() -> new IllegalArgumentException("Invalid car ID"));
+        ShipMaster newCar = new ShipMaster();
+        newCar.setCarName(car.getCarName());
+        newCar.setCarType(car.getCarType());
+        newCar.setCountry(primaryCountry);
+        newCar.setAddedDate(LocalDate.now());
+        shipMasterRepository.save(newCar);
+
+        ShipCount shipCount = new ShipCount();
+        shipCount.setCarName(newCar.getCarName());
+        shipCount.setCountry(primaryCountry);
+        shipCount.setOriginalCountry(car.getCountry());
+        shipCount.setCount(count);
+        shipCount.setRemainingCount(count);
+        shipCountRepository.save(shipCount);
+    }
+}
+
+
+package com.example.carmanagement.controller;
+
+import com.example.carmanagement.model.ShipMaster;
+import com.example.carmanagement.service.CarService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Controller
+public class CarController {
+    @Autowired
+    private CarService carService;
+
+    @GetMapping("/")
+    public String index(@RequestParam(required = false, defaultValue = "India") String country, Model model) {
+        List<ShipMaster> cars = carService.getAllCarsForCountry(country);
+        model.addAttribute("country", country);
+        model.addAttribute("cars", cars);
+        return "index";
+    }
+
+    @GetMapping("/addCar")
+    public String showAddCarForm(Model model) {
+        model.addAttribute("car", new ShipMaster());
+        return "addCar";
+    }
+
+    @PostMapping("/addCar")
+    public String addCar(@ModelAttribute ShipMaster car, @RequestParam int count) {
+        carService.addCarToCountry(car.getId(), car.getCountry(), count);
+        return "redirect:/?country=" + car.getCountry();
+    }
+
+    @GetMapping("/addForeignCar")
+    public String showAddForeignCarForm(@RequestParam(required = false, defaultValue = "India") String primaryCountry, Model model) {
+        List<ShipMaster> foreignCars = carService.getCarsFromOtherCountries(primaryCountry);
+        model.addAttribute("foreignCars", foreignCars);
+        model.addAttribute("primaryCountry", primaryCountry);
+        return "addForeignCar";
+    }
+
+    @PostMapping("/addForeignCar")
+    public String addForeignCar(@RequestParam Long carId, @RequestParam String primaryCountry, @RequestParam int count) {
+        carService.addCarToCountry(carId, primaryCountry, count);
+        return "redirect:/?country=" + primaryCountry;
+    }
+}
+
+
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Management</title>
+</head>
+<body>
+    <h1>Car Management</h1>
+
+    <form method="get" action="/">
+        <label for="country">Select Country:</label>
+        <select id="country" name="country" onchange="this.form.submit()">
+            <option value="India" th:selected="${country == 'India'}">India</option>
+            <option value="USA" th:selected="${country == 'USA'}">USA</option>
+            <!-- Add more countries as needed -->
+        </select>
+    </form>
+
+    <h2>List of Cars in <span th:text="${country}"></span></h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Car Name</th>
+                <th>Car Type</th>
+                <th>Country</th>
+                <th>Date Added</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="car : ${cars}">
+                <td th:text="${car.carName}">Car Name</td>
+                <td th:text="${car.carType}">Car Type</td>
+                <td th:text="${car.country}">Country</td>
+                <td th:text="${car.addedDate}">Date Added</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a th:href="@{'/addCar?country=' + ${country}}">Add New Car</a>
+    <a th:href="@{'/addForeignCar?primaryCountry=' + ${country}}">Add Foreign Car</a>
+</body>
+</html>
+
+
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Foreign Car</title>
+</head>
+<body>
+    <h1>Add Foreign Car to <span th:text="${primaryCountry}"></span></h1>
+    <form th:action="@{/addForeignCar}" method="post">
+        <input type="hidden" name="primaryCountry" th:value="${primaryCountry}">
+        <label for="carId">Select Car:</label>
+        <select id="carId" name="carId" required>
+            <option th:each="car : ${foreignCars}" th:value="${car.id}" th:text="${car.carName} + ' (' + ${car.country} + ')'"></option>
+        </select><br>
+        <label for="count">Count:</label>
+        <input type="number" id="count" name="count" required><br>
+        <button type="submit">Add Car</button>
+    </form>
+</body>
+</html>
