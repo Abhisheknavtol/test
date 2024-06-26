@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Info</title>
+    <style>
+        .car-info-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .car-info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .info-btn {
+            margin-left: 10px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: blue;
+            font-size: 1.2em;
+        }
+
+        .info-popup {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="car-info-container">
+        <div class="car-info-item">
+            <label>Car 1</label>
+            <button class="info-btn" data-car="car1">i</button>
+        </div>
+        <div class="car-info-item">
+            <label>Car 2</label>
+            <button class="info-btn" data-car="car2">i</button>
+        </div>
+        <div class="car-info-item">
+            <label>Car 3</label>
+            <button class="info-btn" data-car="car3">i</button>
+        </div>
+        <!-- Add more car info items as needed -->
+    </div>
+    <div id="info-popup" class="info-popup">
+        <span id="info-text"></span>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const infoButtons = document.querySelectorAll('.info-btn');
+            const infoPopup = document.getElementById('info-popup');
+            const infoText = document.getElementById('info-text');
+
+            const carInfo = {
+                car1: 'Car 1: MAF Date: 2020, Model: Sedan, Color: Red',
+                car2: 'Car 2: MAF Date: 2019, Model: SUV, Color: Blue',
+                car3: 'Car 3: MAF Date: 2021, Model: Hatchback, Color: Green'
+                // Add more car info as needed
+            };
+
+            infoButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const car = button.getAttribute('data-car');
+                    infoText.textContent = carInfo[car];
+                    const rect = button.getBoundingClientRect();
+                    infoPopup.style.top = `${rect.top + window.scrollY + rect.height}px`;
+                    infoPopup.style.left = `${rect.left + window.scrollX}px`;
+                    infoPopup.style.display = 'block';
+                });
+
+                button.addEventListener('mouseleave', () => {
+                    infoPopup.style.display = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
