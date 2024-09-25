@@ -1,0 +1,159 @@
+								-----------------AGIS-------------------
+============================1. convert lat lon to geom================================
+
+
+---------1.1----create geom column----------------------
+	ALTER TABLE aaa ADD COLUMN geom geometry(GEOMETRY, 4326);
+
+--------1.2-----update geom column------------------------
+	UPDATE your_table_name
+	SET geom = ST_MakePoint(longitude::numeric, latitude::numeric)
+	WHERE latitude IS NOT NULL AND longitude IS NOT NULL;
+
+
+
+
+
+
+
+
+
+=========================2. Buffer Code========================================
+--------------------1.1-------buffer icon
+	<li class="nav-item">
+							<a class="nav-link" data-toggle="tab" title="Buffer" href="#buffers" id="buffer" role="tab">
+								<span><img src="assets/images/icons/icn_white/icn_white/buffer_icn.png"></span>
+							</a>
+							<div class="hide detailDiv">Buffer</div>
+						</li>
+						
+						
+						
+						
+-------------------1.2---------------						
+
+
+				<div class="tab-pane settingTabPane" id="buffers" role="tabpanel">
+						<div class="ribbon-wrapper card">
+							<h3 class="ribbon ribbon-bookmark ribbon-info">Buffer</h3>
+							<a class="nav-link closeBtnInPopUp" data-toggle="tab" title="Close" href="#close"
+								role="tab"> <span><i class="ti-close"></i></span>
+							</a>
+							<select class="form-control" id="distanceUnit">
+								<option value="Meter">Meter</option>
+								<option value="Kilometer">Kilometer</option>
+
+							</select>
+							<div class="metertokm">
+								<label>Select Range in meters:</label> <input id="inputLengthnew" class="form-control"
+									type="number" style="width: 100%;" placeholder="Please enter range"
+									oninput="LengthConverterInputbuffer(this.value)"
+									onchange="LengthConverterMetertoKMbuffer(this.value)">
+
+								<p style="margin-top: 10px;">
+									<span class="text-white" style="font-weight: 600">km:</span><span class="text-white"
+										id="outputMeters" style="margin-right: 50px"></span> <span
+										style="font-weight: 600" class="text-white">mt:</span><span id="outputMetersKm"
+										class="text-white"></span>
+								</p>
+
+							</div>
+
+
+							<div class="Kilometertomt">
+								<label>Select Range in kms:</label> <input id="inputLengthkmbuffer" class="form-control"
+									type="number" style="width: 100%;" placeholder="Please enter range"
+									oninput="LengthConverterInputKmbuffer(this.value)"
+									onchange="LengthConverterKmbuffer(this.value)">
+
+								<p style="margin-top: 10px;">
+									<span style="font-weight: 600" class="text-white">mt:</span><span class="text-white"
+										id="outputKiloMetersbuffers" style="margin-right: 50px;"></span> <span
+										style="font-weight: 600" class="text-white">km:</span><span class="text-white"
+										id="outputKiloMetersConversionbuffer"></span>
+								</p>
+							</div>
+							<div id="bridgeRoadId1" class="dropdown-check-list" tabindex="100">
+								<span class="anchor w-100 text-white">Select</span>
+								<div>
+									<ul class="items">
+									       <li><input type="checkbox" id="your_id_name" value="your_table_name"
+												onchange="checkboxStatusChange_new(this.value)" name="checkbuffer" />
+											<label class="form-check-label" for="your_id_name"> Layer Name </label>
+										</li>
+									</ul>
+								</div>
+							</div>
+
+							<div class="">
+								<ul class="nav nav-pills nav-pills-rose" role="tablist" style="padding-top: 5px;">
+									<li class="nav-item"><a class="nav-link active" data-toggle="tab"
+											href="#bufferpointnew" role="tablist"
+											onclick="BufferselectedTypenew('Point')"
+											style="border-radius: 15px; padding: 5px 20x;"> <i class="ti-location-pin"
+												style="padding: 1px 0;"></i>
+										</a></li>
+
+									<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#bufferlinenew"
+											role="tablist" onclick="BufferselectedTypenew('LineString')"
+											style="border-radius: 15px; padding: 5px 20x;"> <i class="ti-ruler-alt"
+												style="padding: 1px 0;"></i>
+										</a></li>
+
+									<li class="nav-item"><a class="nav-link" data-toggle="tab" href="#bufferpolygonenew"
+											role="tablist" onclick="BufferselectedTypenew('Polygon')"
+											style="border-radius: 15px; padding: 5px 20x;"> <i class="ti-ruler-alt-2"
+												style="padding: 1px 0;"></i>
+										</a></li>
+
+
+								</ul>
+
+
+								<div class="tab-content tab-space">
+									<div class="tab-pane active text-white" id="link1">Location:</div>
+									<div class="tab-pane" id="link2">
+										Distance:<span id="distance"></span>
+
+									</div>
+									<div class="tab-pane" id="link3">
+										Area:<span id="area"></span>
+
+									</div>
+								</div>
+
+							</div>
+							<button type="button" class="btn btn-primary mt-3" onclick="clickedreport()">Report</button>
+							<button type="button" class="btn btn-primary mt-3" onclick="deleteBuffer()">Clear</button>
+							</br>
+						</div>
+					</div>
+
+
+
+============================3. controller ================================
+
+	@PostMapping("/getBufferWKT")
+	public List getBufferWKT(@RequestParam("wkt") String wkt, @RequestParam("range") String range) {
+
+		String q = "SELECT ST_astext(ST_Buffer(ST_GeomFromText('" + wkt + "', 4326)::geography, '" + range
+				+ "', 'quad_segs=128')) AS wkt";
+		List<Map<String, Object>> list = template.queryForList(q);
+		return list;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
